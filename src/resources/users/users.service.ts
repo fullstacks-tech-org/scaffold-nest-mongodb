@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
+import { mongo } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User, UserDocument } from './entities/user.entity';
+import { UserDocument } from './entities/user.entity';
 import { UsersRepository } from './repositories/users.repository';
 import { UserFilter } from './types';
 
@@ -22,9 +22,14 @@ export class UsersService {
     return await this.usersRepository.findOneBy(query);
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<UserDocument> {
+  async update(
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserDocument> {
     await this.usersRepository.update(id, updateUserDto);
-    return await this.usersRepository.findOneBy({ id });
+    return await this.usersRepository.findOneBy({
+      _id: new mongo.ObjectId(id),
+    });
   }
 
   async remove(id: string): Promise<void> {

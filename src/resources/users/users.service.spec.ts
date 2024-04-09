@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { mongo, ObjectId } from 'mongoose';
 import { UsersService } from './users.service';
 import { UsersRepository } from './repositories/users.repository';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -10,7 +11,7 @@ class UsersRepositoryMock {
 
   async save(userDto: CreateUserDto): Promise<User> {
     const user: User = {
-      id: Math.random().toString(),
+      _id: new mongo.ObjectId() as unknown as ObjectId,
       role: Role.User,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -52,7 +53,7 @@ describe('UsersService', () => {
       };
       const createdUser = await service.create(createUserDto);
       expect(createdUser).toBeDefined();
-      expect(createdUser.id).toBeDefined();
+      expect(createdUser._id).toBeDefined();
       expect(createdUser.name).toEqual(createUserDto.name);
       expect(createdUser.email).toEqual(createUserDto.email);
       expect(createdUser.role).toEqual(Role.User);

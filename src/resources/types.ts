@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ObjectId } from 'mongoose';
 
 export class ResultType<T> {
   constructor(
@@ -28,11 +29,11 @@ export class ResultType<T> {
 
 export class EntityDto {
   @ApiProperty()
-  id: string;
+  _id: ObjectId;
 }
 
 export class Entity {
-  id: string;
+  _id: ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }

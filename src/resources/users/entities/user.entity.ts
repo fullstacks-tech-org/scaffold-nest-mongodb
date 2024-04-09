@@ -21,7 +21,7 @@ const UserSchema = new Schema<UserDocument>({
   password: { type: String, required: true },
   role: { type: String, enum: Object.values(Role), default: Role.User },
   createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
+  updatedAt: { type: Date, default: Date.now },
 });
 
 const UserModel = model<UserDocument>('User', UserSchema);
