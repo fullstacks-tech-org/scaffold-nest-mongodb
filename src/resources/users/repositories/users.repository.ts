@@ -1,25 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-
-import { User } from '../entities/user.entity';
-import { UserFilter } from '../types';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { UserDocument } from '../entities/user.entity';
+import { BaseRepository } from '../../base.repository';
 
 @Injectable()
-export class UsersRepository extends Repository<User> {
+export class UsersRepository extends BaseRepository<UserDocument> {
   constructor(
-    @InjectRepository(User)
-    private readonly usersRepository: Repository<User>,
+    @InjectModel('User')
+    private readonly userModel: Model<UserDocument>,
   ) {
-    super(
-      usersRepository.target,
-      usersRepository.manager,
-      usersRepository.queryRunner,
-    );
-  }
-
-  async checkIfUserExists(query: UserFilter): Promise<boolean> {
-    const count = await this.usersRepository.count({ where: query });
-    return count > 0;
+    super(userModel);
   }
 }

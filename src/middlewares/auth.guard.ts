@@ -6,12 +6,11 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { ResultType } from './types';
-import { UsersService } from './users/users.service';
-import { Role } from './users/types';
+import { ResultType } from '../resources/types';
+import { UsersService } from '../resources/users/users.service';
 
 @Injectable()
-export class AuthOwnerAdminGuard implements CanActivate {
+export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private readonly usersService: UsersService,
@@ -33,7 +32,7 @@ export class AuthOwnerAdminGuard implements CanActivate {
       });
       request['userId'] = payload['userId'];
       const userExists = await this.usersService.checkIfUserExists({
-        id: parseInt(payload['userId']),
+        id: payload['userId'],
       });
       if (!userExists) {
         throw new ResultType(
@@ -41,20 +40,11 @@ export class AuthOwnerAdminGuard implements CanActivate {
           ['User not found'],
           'Unauthorized',
         );
-      } else if (
-        payload['role'] !== Role.Admin &&
-        +request.params.id !== +payload['userId']
-      ) {
-        throw new ResultType(
-          HttpStatus.UNAUTHORIZED,
-          ['User is not an admin or is not changing his own data'],
-          'Unauthorized',
-        );
       }
-    } catch (error: any) {
+    } catch {
       throw new ResultType(
-        error?.status || HttpStatus.UNAUTHORIZED,
-        error?.message || ['Unknow token'],
+        HttpStatus.UNAUTHORIZED,
+        ['Unknow token'],
         'Unauthorized',
       );
     }

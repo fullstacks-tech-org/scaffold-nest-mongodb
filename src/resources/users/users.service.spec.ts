@@ -10,8 +10,10 @@ class UsersRepositoryMock {
 
   async save(userDto: CreateUserDto): Promise<User> {
     const user: User = {
-      id: Math.random(),
+      id: Math.random().toString(),
       role: Role.User,
+      createdAt: new Date(),
+      updatedAt: new Date(),
       ...userDto,
     };
     this.users.push(user);

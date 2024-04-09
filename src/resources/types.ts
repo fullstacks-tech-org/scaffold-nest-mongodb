@@ -28,5 +28,11 @@ export class ResultType<T> {
 
 export class EntityDto {
   @ApiProperty()
-  id: number;
+  id: string;
+}
+
+export class Entity {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
 }

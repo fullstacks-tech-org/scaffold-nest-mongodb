@@ -13,7 +13,7 @@ import { ApiBearerAuth, ApiTags, ApiResponse } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserFullDto } from './dto/user-full.dto';
-import { AuthOwnerAdminGuard } from '../auth-owner-admin.guard';
+import { AuthOwnerAdminGuard } from '../../middlewares/auth-owner-admin.guard';
 import { ResultType } from '../types';
 
 @ApiTags('users')
@@ -63,7 +63,7 @@ export class UsersController {
   })
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id') id: string): Promise<ResultType<UserFullDto>> {
-    const user = await this.usersService.findOne({ id: +id });
+    const user = await this.usersService.findOne({ id });
     if (!user) {
       return new ResultType(HttpStatus.NOT_FOUND, [], 'User not found');
     }
@@ -98,7 +98,7 @@ export class UsersController {
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<ResultType<UserFullDto>> {
-    const user = await this.usersService.update(+id, updateUserDto);
+    const user = await this.usersService.update(id, updateUserDto);
     if (!user) {
       return new ResultType(HttpStatus.NOT_FOUND, [], 'User not found');
     }
@@ -125,7 +125,7 @@ export class UsersController {
   })
   @HttpCode(HttpStatus.OK)
   async remove(@Param('id') id: string): Promise<ResultType<null>> {
-    await this.usersService.remove(+id);
+    await this.usersService.remove(id);
     return new ResultType(HttpStatus.OK, [], 'User deleted successfully');
   }
 }

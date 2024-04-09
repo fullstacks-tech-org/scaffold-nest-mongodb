@@ -7,6 +7,7 @@ import { SigninDto } from './dto/signin.dto';
 import { AuthResultDto } from './dto/auth-result.dto';
 import { SignupDto } from './dto/signup-dto';
 import { ResultType } from '../types';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -26,10 +27,10 @@ export class AuthService {
       throw new ResultType(HttpStatus.UNAUTHORIZED, [], 'Unauthorized');
     }
 
-    const payload = { userId: user.id, role: user.role };
+    const payload = { userId: user?.id, role: user?.role };
 
     return {
-      user,
+      user: user as User,
       access_token: await this.jwtService.signAsync(payload),
     };
   }
@@ -54,7 +55,7 @@ export class AuthService {
     const payload = { userId: user.id, role: user.role };
 
     return {
-      user,
+      user: user as User,
       access_token: await this.jwtService.signAsync(payload),
     };
   }
