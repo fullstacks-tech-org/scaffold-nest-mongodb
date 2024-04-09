@@ -1,8 +1,13 @@
 import { Module } from '@nestjs/common';
-import { databaseProviders } from './database.providers';
+import { MongooseModule, MongooseModuleFactoryOptions } from '@nestjs/mongoose';
 
 @Module({
-  providers: [...databaseProviders],
-  exports: [...databaseProviders],
+  imports: [
+    MongooseModule.forRootAsync({
+      useFactory: (): MongooseModuleFactoryOptions => ({
+        uri: process.env.DATABASE_CONNECTION,
+      }),
+    }),
+  ],
 })
 export class DatabaseModule {}
